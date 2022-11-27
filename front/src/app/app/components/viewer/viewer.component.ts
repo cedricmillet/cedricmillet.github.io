@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 
 @Component({
@@ -27,22 +28,27 @@ export class ViewerComponent implements OnInit {
     const [w,h] = this.getSize();
     //  Renderer
     this.renderer.setSize(w, h);
-    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
-    this.scene.background = new THREE.Color( 0x282828 );
-    
     // Fix gltf RBG rendering
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.2;
+    this.renderer.toneMappingExposure = 1; // 1.2
     this.renderer.outputEncoding = THREE.sRGBEncoding;
+    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
     
     this.renderer.shadowMap.enabled = true;
+    
+    const environment = new RoomEnvironment();
+		const pmremGenerator = new THREE.PMREMGenerator( this.renderer );
+    this.scene.background = new THREE.Color( 0x282828 );
+		this.scene.environment = pmremGenerator.fromScene( environment ).texture;
+    environment.dispose();
+
     //  Light
-    this.scene.add(new THREE.DirectionalLight(0xffffff, .2));
-    this.scene.add(new THREE.AmbientLight(0x404040, 1));
-    const spot = new THREE.SpotLight(0x404040, 3, 10)
-    spot.position.set(0,6,0)
+    this.scene.add(new THREE.DirectionalLight(0xffffff, .1));
+    //this.scene.add(new THREE.AmbientLight(0x404040, .1));
+    /*const spot = new THREE.SpotLight(0x404040, 3, 10)
+    spot.position.set(0,6,
     spot.lookAt(new THREE.Vector3(0,0,0));
-    this.scene.add(spot)
+    this.scene.add(spot)*/
     //  Helpers
     this.scene.add(new THREE.GridHelper(80, 40));
     //this.scene.add(new THREE.AxesHelper(10));
@@ -51,6 +57,7 @@ export class ViewerComponent implements OnInit {
     this.camera.position.set(5,10,5);
     this.camera.lookAt(0,0,0);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
     this.scene.add(this.parentGroup);
     this.animate();
     this.enableRaycasting();
@@ -108,6 +115,7 @@ export class ViewerComponent implements OnInit {
     const scene = this.scene;
     this.scene.receiveShadow = this.scene.castShadow = true;
     //  BASE
+    /*
     (() => {
       const geometry = new THREE.CylinderGeometry( 8, 8, 3, 32 );
       const material = new THREE.MeshPhongMaterial( {color: 0xf0ffff} );
@@ -115,7 +123,7 @@ export class ViewerComponent implements OnInit {
       cylinder.position.set(0, -1, 0)
       cylinder.receiveShadow = true
       scene.add( cylinder );
-    })();
+    })();*/
   }
 
 
