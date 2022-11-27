@@ -1,17 +1,17 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { SVGLoader, SVGResult } from 'three/examples/jsm/loaders/SVGLoader';
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-viewer',
   templateUrl: './viewer.component.html',
   styleUrls: ['./viewer.component.css']
 })
-export class ViewerComponent {
+export class ViewerComponent implements OnInit {
   @ViewChild('rendererContainer') rendererContainer!: ElementRef;
 
-  renderer = new THREE.WebGLRenderer({antialias: true});
+  renderer = new THREE.WebGLRenderer({antialias: true, precision: "highp"});
   scene:THREE.Scene;
   camera:THREE.PerspectiveCamera;
   controls:OrbitControls;
@@ -29,12 +29,14 @@ export class ViewerComponent {
     this.renderer.setSize(w, h);
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
     this.scene.background = new THREE.Color( 0x282828 );
+    
+    // this.renderer.shadowMap.enabled = true;
     //  Light
-    this.scene.add(new THREE.DirectionalLight(0xffffff, 0.5));
-    this.scene.add(new THREE.AmbientLight(0x404040));
+    this.scene.add(new THREE.DirectionalLight(0xffffff, 1));
+    this.scene.add(new THREE.AmbientLight(0x404040, 2));
     //  Helpers
-    this.scene.add(new THREE.GridHelper(20, 10));
-    this.scene.add(new THREE.AxesHelper(10));
+    this.scene.add(new THREE.GridHelper(80, 40));
+    //this.scene.add(new THREE.AxesHelper(10));
     //  Camera
     this.camera = new THREE.PerspectiveCamera(75, w/h, 1, 1000);
     this.camera.position.set(5,10,5);
@@ -43,14 +45,8 @@ export class ViewerComponent {
     this.scene.add(this.parentGroup);
     this.animate();
     this.enableRaycasting();
-
-    //  Debug purpose only
-    const position = new THREE.Vector3(0,0,0)
-    const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    const material = new THREE.MeshBasicMaterial( {color: 0xf000ff} );
-    const cube = new THREE.Mesh( geometry, material );
-    cube.position.set(...position.toArray())
-    this.parentGroup.add(cube)
+    this.loadGTTF();
+    this.create3DEnv();
   }
 
   ngOnInit(): void {}
@@ -97,5 +93,41 @@ export class ViewerComponent {
 
   private onClickOnMesh(origin:THREE.Vector3) {
     console.log(`clicked on mesh`, origin)
+  }
+
+  private create3DEnv() {
+    const scene = this.scene;
+    //  BASE
+    (() => {
+      const geometry = new THREE.CylinderGeometry( 8, 8, 3, 32 );
+      const material = new THREE.MeshPhongMaterial( {color: 0xf0ffff} );
+      const cylinder = new THREE.Mesh( geometry, material );
+      cylinder.position.set(0, -1, 0)
+      scene.add( cylinder );
+    })();
+  }
+
+
+  private loadGTTF() {
+    const scene = this.scene
+    const loader = new GLTFLoader();
+    loader.load('assets/scene.glb',
+      // called when the resource is loaded
+      function ( gltf ) {
+        scene.add( gltf.scene );
+        /*
+        scene.receiveShadow = true;
+        scene.castShadow = true
+        scene.traverse((n:any) => { if ( n.isMesh ) {
+          n.castShadow = true; 
+          n.receiveShadow = true;
+          if(n.material.map) n.material.map.anisotropy = 16; 
+        }});*/
+      }, function ( xhr ) {
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+      }, function ( error ) {
+        console.log( 'An error happened', error );
+      }
+    );
   }
 }
