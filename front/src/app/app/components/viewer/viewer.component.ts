@@ -30,10 +30,19 @@ export class ViewerComponent implements OnInit {
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
     this.scene.background = new THREE.Color( 0x282828 );
     
-    // this.renderer.shadowMap.enabled = true;
+    // Fix gltf RBG rendering
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.2;
+    this.renderer.outputEncoding = THREE.sRGBEncoding;
+    
+    this.renderer.shadowMap.enabled = true;
     //  Light
-    this.scene.add(new THREE.DirectionalLight(0xffffff, 1));
-    this.scene.add(new THREE.AmbientLight(0x404040, 2));
+    this.scene.add(new THREE.DirectionalLight(0xffffff, .2));
+    this.scene.add(new THREE.AmbientLight(0x404040, 1));
+    const spot = new THREE.SpotLight(0x404040, 3, 10)
+    spot.position.set(0,6,0)
+    spot.lookAt(new THREE.Vector3(0,0,0));
+    this.scene.add(spot)
     //  Helpers
     this.scene.add(new THREE.GridHelper(80, 40));
     //this.scene.add(new THREE.AxesHelper(10));
@@ -97,12 +106,14 @@ export class ViewerComponent implements OnInit {
 
   private create3DEnv() {
     const scene = this.scene;
+    this.scene.receiveShadow = this.scene.castShadow = true;
     //  BASE
     (() => {
       const geometry = new THREE.CylinderGeometry( 8, 8, 3, 32 );
       const material = new THREE.MeshPhongMaterial( {color: 0xf0ffff} );
       const cylinder = new THREE.Mesh( geometry, material );
       cylinder.position.set(0, -1, 0)
+      cylinder.receiveShadow = true
       scene.add( cylinder );
     })();
   }
@@ -115,14 +126,14 @@ export class ViewerComponent implements OnInit {
       // called when the resource is loaded
       function ( gltf ) {
         scene.add( gltf.scene );
-        /*
+        
         scene.receiveShadow = true;
         scene.castShadow = true
         scene.traverse((n:any) => { if ( n.isMesh ) {
           n.castShadow = true; 
           n.receiveShadow = true;
           if(n.material.map) n.material.map.anisotropy = 16; 
-        }});*/
+        }});
       }, function ( xhr ) {
         console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
       }, function ( error ) {
