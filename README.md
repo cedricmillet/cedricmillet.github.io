@@ -7,4 +7,3 @@
 * Alarm with real time (date / hours)
 * Book "Crack the coding interview" on the desk
 * Boulier de Newton
-* Unité centrale avec led gamer à l'intérieur
