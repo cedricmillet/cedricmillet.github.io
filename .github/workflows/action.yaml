@@ -63,5 +63,6 @@ jobs:
           body: ${{ steps.changelog.outputs.clean_changelog }}
 
       - name: Deploy
-        run: |
-          ls -lah && npm run deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
