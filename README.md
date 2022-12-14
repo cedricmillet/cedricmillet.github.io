@@ -1,6 +1,6 @@
 # Portfolio 3D
 
-Preview on [cedricmillet.github.io](https://cedricmillet.github.io)
+Portfolio available at [cedricmillet.github.io](https://cedricmillet.github.io)
 
 [![Angular Build](https://github.com/cedricmillet/cedricmillet.github.io/actions/workflows/action.yaml/badge.svg)](https://github.com/cedricmillet/cedricmillet.github.io/actions/workflows/action.yaml)
 
