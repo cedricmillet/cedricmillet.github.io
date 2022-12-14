@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment';
-import { Component, ElementRef, HostListener, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WebPageRenderingSystem } from './WebPageRendering';
 import { ViewerUtils } from './ViewerUtils';
 
@@ -15,6 +15,8 @@ import { ViewerUtils } from './ViewerUtils';
 export class ViewerComponent implements OnInit {
   @ViewChild('rendererContainer') rendererContainer!: ElementRef;
   @ViewChild('rendererContainer2') rendererContainer2!: ElementRef;
+
+  @Output('loaded') loadedOutput = new EventEmitter<boolean>();
   
   renderer = new THREE.WebGLRenderer({antialias: true, precision: "highp"});
   scene:THREE.Scene;
@@ -64,7 +66,9 @@ export class ViewerComponent implements OnInit {
     //this.controls.enableDamping = true;
     this.animate();
     this.enableRaycasting();
-    ViewerUtils.loadGTTF(this.scene, 'assets/scene.glb', () => {});
+    ViewerUtils.loadGTTF(this.scene, 'assets/scene.glb', 
+            () => this.loadedOutput.emit(true), 
+            (err) => this.loadedOutput.emit(false));
     WebPageRenderingSystem.init(w, h, this.camera, this.rendererContainer2);
     WebPageRenderingSystem.createIntecrativeScreen();
     this.create3DEnv();
