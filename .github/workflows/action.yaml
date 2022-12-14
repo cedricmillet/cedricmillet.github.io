@@ -1,4 +1,4 @@
-name: Angular GitHub CI/CD
+name: Angular Build and Deploy
 on:
   push:
     branches:
@@ -44,7 +44,7 @@ jobs:
           npm ci
       - name: Build
         run: |
-          npm run build -- --configuration production
+          npm run build -- --configuration production --base-href
       - name: Conventional Changelog Action
         id: changelog
         uses: TriPSs/conventional-changelog-action@v3
@@ -64,4 +64,4 @@ jobs:
 
       - name: Deploy
         run: |
-          npm run deploy
+          ls -lah && npm run deploy
