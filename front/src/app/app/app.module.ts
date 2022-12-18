@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './components/app.component';
-import { ViewerComponent } from './components/viewer/viewer.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { Viewer3dModule } from '../viewer-3d/viewer-3d.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ViewerComponent,
     LoaderComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    Viewer3dModule
   ],
   providers: [],
   bootstrap: [AppComponent]
