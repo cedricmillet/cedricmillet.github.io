@@ -1,0 +1,13 @@
+:host {
+    position: fixed;
+    top: 1.5em;
+    left: 0;
+    right: 0;
+    min-height: 1em;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center; /* vertical alignment */
+
+    font-size: 1.2em;
+}

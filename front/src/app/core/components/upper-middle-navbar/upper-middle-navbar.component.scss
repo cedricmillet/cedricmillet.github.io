@@ -1,0 +1,14 @@
+ul {
+    list-style-type: none;
+    display: flex;
+
+    li {
+        margin-left: 1em;
+        margin-right: 1em;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+}

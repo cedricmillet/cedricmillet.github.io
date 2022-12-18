@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FooterComponent } from './footer.component';
+import { UpperRightCtaComponent } from './upper-right-cta.component';
 
-describe('FooterComponent', () => {
-  let component: FooterComponent;
-  let fixture: ComponentFixture<FooterComponent>;
+describe('UpperRightCtaComponent', () => {
+  let component: UpperRightCtaComponent;
+  let fixture: ComponentFixture<UpperRightCtaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FooterComponent ]
+      declarations: [ UpperRightCtaComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(FooterComponent);
+    fixture = TestBed.createComponent(UpperRightCtaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
