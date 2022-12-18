@@ -1,13 +1,17 @@
 :host {
     position: fixed;
     top: 1.5em;
-    left: 0;
-    right: 0;
-    min-height: 1em;
+    left: 2em;
+    right: 2em;
 
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center; /* vertical alignment */
 
     font-size: 1.2em;
+
+    app-upper-left-logo, app-upper-right-cta, upper-middle-navbar { flex: 1; }
+
+    app-upper-left-logo { margin-right: auto; }
+    app-upper-right-cta { margin-left: auto; }
 }
