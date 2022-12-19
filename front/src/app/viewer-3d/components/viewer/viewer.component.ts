@@ -95,7 +95,7 @@ export class ViewerComponent implements OnInit {
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h);
-    WebPageRenderingSystem.onWindowResize();
+    WebPageRenderingSystem.onWindowResize(w, h);
   }
   
   private enableRaycasting() {

@@ -101,8 +101,7 @@ export class WebPageRenderingSystem {
         this.controls2.update();
     }
 
-    public static onWindowResize() {
-        const {width: w, height: h} = this.renderer2.getSize()
+    public static onWindowResize(w:number, h:number) {
         this.renderer2.setSize(w, h);
     }
 
